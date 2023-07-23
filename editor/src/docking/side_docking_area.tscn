@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://4j137odg7n6b"]
+
+[ext_resource type="PackedScene" uid="uid://dny2jrbn4ptd3" path="res://src/docking/panel_dock_region.tscn" id="1_4n5m3"]
+[ext_resource type="Script" path="res://src/docking/side_docking_area.gd" id="1_v2ddn"]
+
+[node name="SideDockingArea" type="HSplitContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_v2ddn")
+
+[node name="LeftArea" type="VSplitContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LeftTop" parent="LeftArea" instance=ExtResource("1_4n5m3")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LeftBottom" parent="LeftArea" instance=ExtResource("1_4n5m3")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RightArea" type="VSplitContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightTop" parent="RightArea" instance=ExtResource("1_4n5m3")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RightBottom" parent="RightArea" instance=ExtResource("1_4n5m3")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="active_state_changed" from="LeftArea/LeftTop" to="." method="_on_region_active_state_changed"]
+[connection signal="active_state_changed" from="LeftArea/LeftBottom" to="." method="_on_region_active_state_changed"]
+[connection signal="active_state_changed" from="RightArea/RightTop" to="." method="_on_region_active_state_changed"]
+[connection signal="active_state_changed" from="RightArea/RightBottom" to="." method="_on_region_active_state_changed"]

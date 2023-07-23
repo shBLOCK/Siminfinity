@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddgsn16w4jxiy"]
+
+[ext_resource type="Script" path="res://src/panels/properties/properties_group.gd" id="1_685si"]
+
+[node name="PropertiesGroup" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_685si")
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PropertiesGroupButton"
+text = "123456"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"IndentMargin"
+
+[node name="SubPropertiesContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://c01dr2mc7j4a3"]
+
+[node name="AgentPanel" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0

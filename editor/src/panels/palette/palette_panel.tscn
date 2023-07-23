@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://r78uwrw2dhpb"]
+
+[node name="PalettePanel" type="VBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0

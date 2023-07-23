@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://cscx0fp8unccc"]
+
+[ext_resource type="PackedScene" uid="uid://dquqr4witb1pr" path="res://src/panels/properties/types/prop_widget.tscn" id="1_4smcj"]
+[ext_resource type="Script" path="res://src/panels/properties/types/prop_spin_box.gd" id="1_g2jvk"]
+
+[node name="PropSpinBox" instance=ExtResource("1_4smcj")]
+offset_right = -840.0
+offset_bottom = -617.0
+script = ExtResource("1_g2jvk")
+
+[node name="SpinBox" type="SpinBox" parent="." index="1"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+select_all_on_focus = true

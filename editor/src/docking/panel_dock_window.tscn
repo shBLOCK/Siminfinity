@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbj73l3dccixa"]
+
+[ext_resource type="Script" path="res://src/docking/panel_dock_window.gd" id="1_nja3y"]
+[ext_resource type="PackedScene" uid="uid://dny2jrbn4ptd3" path="res://src/docking/panel_dock_region.tscn" id="2_04rk2"]
+
+[node name="PanelDockWindow" type="Window"]
+visible = false
+transient = true
+script = ExtResource("1_nja3y")
+
+[node name="PanelDockRegion" parent="." instance=ExtResource("2_04rk2")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="active_state_changed" from="PanelDockRegion" to="." method="_on_panel_dock_region_active_state_changed"]
+[connection signal="current_panel_changed" from="PanelDockRegion" to="." method="_on_current_panel_changed"]

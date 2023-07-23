@@ -1,0 +1,35 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="SimEditor"
+run/main_scene="res://src/main_window.tscn"
+config/features=PackedStringArray("4.1", "Forward Plus")
+run/low_processor_mode=true
+config/icon="res://icon.svg"
+
+[autoload]
+
+DockingManager="*res://src/docking/docking_manager.gd"
+
+[display]
+
+window/energy_saving/keep_screen_on=false
+window/subwindows/embed_subwindows=false
+
+[gui]
+
+theme/custom="res://assets/theme/dark.theme"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://assets/lang/lang.en.translation", "res://assets/lang/lang.zh.translation")
+locale/test="zh"

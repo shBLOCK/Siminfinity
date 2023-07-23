@@ -1,0 +1,39 @@
+class_name PropertiesPanel extends VBoxContainer
+
+
+@onready var PropertiesContainer := %PropertiesContainer
+
+var SectionLabel := preload("res://src/panels/properties/section_label.tscn")
+
+
+func add_section(name: String, icon: Texture2D) -> void:
+	var sec = SectionLabel.instantiate().setup(name, icon)
+	PropertiesContainer.add_child(sec)
+
+func add_property(prop: PropWidget) -> void:
+	pass
+
+func push_group(name: String) -> void:
+	pass
+
+func pop_group() -> void:
+	pass
+
+func next_group(name: String) -> void:
+	## push pop
+	pop_group()
+	push_group(name)
+
+func clear():
+	for prop in PropertiesContainer.get_children():
+		prop.queue_free()
+
+##############################
+func _ready():
+	if Utils.is_main(self):
+		_demo()
+
+func _demo():
+	print("Running demo...")
+	add_section("Section 1", load("res://icon.svg"))
+	print("???")

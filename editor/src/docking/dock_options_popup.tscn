@@ -1,0 +1,96 @@
+[gd_scene load_steps=3 format=3 uid="uid://pggaehkc0ba1"]
+
+[ext_resource type="Script" path="res://src/docking/dock_options_popup.gd" id="1_ayoyd"]
+[ext_resource type="PackedScene" uid="uid://byn5n81eav5e5" path="res://src/docking/panel_dock_region_button.tscn" id="2_2yj2r"]
+
+[node name="DockOptionsPopup" type="PopupPanel"]
+size = Vector2i(189, 100)
+visible = true
+script = ExtResource("1_ayoyd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="LL" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LLT" parent="VBoxContainer/HBoxContainer/LL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LLB" parent="VBoxContainer/HBoxContainer/LL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LR" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LRT" parent="VBoxContainer/HBoxContainer/LR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LRB" parent="VBoxContainer/HBoxContainer/LR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Mid" type="Panel" parent="VBoxContainer/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.498039)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="RL" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RLT" parent="VBoxContainer/HBoxContainer/RL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RLB" parent="VBoxContainer/HBoxContainer/RL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RR" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RRT" parent="VBoxContainer/HBoxContainer/RR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RRB" parent="VBoxContainer/HBoxContainer/RR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonMakeFloating" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAKE_FLOATING"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LL/LLT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LL/LLB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LR/LRT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LR/LRB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RL/RLT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RL/RLB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RR/RRT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RR/RRB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ButtonMakeFloating" to="." method="_on_button_make_floating_pressed"]
+[connection signal="theme_changed" from="VBoxContainer/ButtonMakeFloating" to="." method="_on_button_make_floating_theme_changed"]

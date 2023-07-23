@@ -1,0 +1,68 @@
+[gd_scene load_steps=4 format=3 uid="uid://dby0ci31iitov"]
+
+[ext_resource type="Script" path="res://src/main_window.gd" id="1_38sek"]
+[ext_resource type="PackedScene" uid="uid://4j137odg7n6b" path="res://src/docking/side_docking_area.tscn" id="2_4jgfw"]
+[ext_resource type="PackedScene" uid="uid://dvv0hjvnuqjih" path="res://src/editing/editing_area.tscn" id="3_odjts"]
+
+[node name="MainWindow" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"MainBackground"
+script = ExtResource("1_38sek")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_type_variation = &"MarginContainer4px"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="MarginContainer/VBoxContainer/TopBar"]
+layout_mode = 2
+
+[node name="PopupMenu" type="PopupMenu" parent="MarginContainer/VBoxContainer/TopBar/MenuBar"]
+
+[node name="ToolBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 10
+alignment = 2
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/TopBar/ToolBar"]
+custom_minimum_size = Vector2(112, 0)
+layout_mode = 2
+text = "Test
+"
+
+[node name="MainArea" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer/MainArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeftSideDockingArea" parent="MarginContainer/VBoxContainer/MainArea/HSplitContainer" instance=ExtResource("2_4jgfw")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer/MainArea/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EditingArea" parent="MarginContainer/VBoxContainer/MainArea/HSplitContainer/HSplitContainer" instance=ExtResource("3_odjts")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RightSideDockingArea" parent="MarginContainer/VBoxContainer/MainArea/HSplitContainer/HSplitContainer" instance=ExtResource("2_4jgfw")]
+unique_name_in_owner = true
+layout_mode = 2
