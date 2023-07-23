@@ -19,11 +19,20 @@ config/icon="res://icon.svg"
 [autoload]
 
 DockingManager="*res://src/docking/docking_manager.gd"
+DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
 
 [display]
 
 window/energy_saving/keep_screen_on=false
 window/subwindows/embed_subwindows=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/godot-idea-board/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/script_panel_plus/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
+
+[godot_idea_board]
+
+directory_path="res://addons/godot-idea-board/savedata/"
 
 [gui]
 

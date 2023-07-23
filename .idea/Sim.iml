@@ -5,6 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/simulation" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/editor/.godot" />
+      <excludeFolder url="file://$MODULE_DIR$/editor/addons" />
+      <excludeFolder url="file://$MODULE_DIR$/editor/examples_dd3d" />
+      <excludeFolder url="file://$MODULE_DIR$/editor/signal_extensions" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (Sim)" jdkType="Python SDK" />
