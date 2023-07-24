@@ -61,14 +61,14 @@ func _demo() -> void:
 	begin_section("Section 1", load("res://icon.svg"))
 	
 	push_group("Group 1")
-	prop = preload("res://src/panels/properties/types/prop_spin_box.tscn").instantiate().setup("Prop 1")
+	prop = preload("res://src/panels/properties/types/prop_spin_box.tscn").instantiate().setup("Property 1")
 	add_property(prop)
 	pop_group()
 	
 	const nested_layers := 5
 	for i in range(nested_layers):
 		push_group("Nested %d" % i)
-	prop = preload("res://src/panels/properties/types/prop_spin_box.tscn").instantiate().setup("Prop 1")
+	prop = preload("res://src/panels/properties/types/prop_spin_box.tscn").instantiate().setup("Nested Property 1")
 	add_property(prop)
 	pop_group(nested_layers)
 	

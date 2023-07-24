@@ -1,0 +1,112 @@
+[gd_scene load_steps=6 format=3 uid="uid://pggaehkc0ba1"]
+
+[ext_resource type="Script" path="res://src/layout/dock_options_popup.gd" id="1_ayoyd"]
+[ext_resource type="PackedScene" uid="uid://byn5n81eav5e5" path="res://src/layout/panel_dock_region_button.tscn" id="2_2yj2r"]
+[ext_resource type="Script" path="res://src/utils/theme_icon_texture.gd" id="3_nheuk"]
+
+[sub_resource type="Image" id="Image_di7x8"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 224, 224, 224, 114, 224, 224, 224, 243, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 242, 224, 224, 224, 112, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 224, 224, 224, 243, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 242, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 255, 255, 255, 0, 255, 255, 255, 0, 147, 147, 147, 106, 145, 145, 145, 242, 145, 145, 145, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 242, 145, 145, 145, 255, 145, 145, 145, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 220, 220, 220, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 241, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 179, 179, 179, 255, 220, 220, 220, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 255, 224, 224, 224, 241, 225, 225, 225, 109, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 145, 145, 145, 242, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 242, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 146, 146, 146, 105, 145, 145, 145, 242, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 255, 145, 145, 145, 242, 146, 146, 146, 105, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_oowbh"]
+image = SubResource("Image_di7x8")
+script = ExtResource("3_nheuk")
+theme_type = "EditorIcons"
+theme_name = "MakeFloating"
+
+[node name="DockOptionsPopup" type="PopupPanel"]
+size = Vector2i(189, 100)
+visible = true
+script = ExtResource("1_ayoyd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="LL" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LLT" parent="VBoxContainer/HBoxContainer/LL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LLB" parent="VBoxContainer/HBoxContainer/LL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LR" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LRT" parent="VBoxContainer/HBoxContainer/LR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LRB" parent="VBoxContainer/HBoxContainer/LR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Mid" type="Panel" parent="VBoxContainer/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.498039)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="RL" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RLT" parent="VBoxContainer/HBoxContainer/RL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RLB" parent="VBoxContainer/HBoxContainer/RL" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RR" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RRT" parent="VBoxContainer/HBoxContainer/RR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RRB" parent="VBoxContainer/HBoxContainer/RR" instance=ExtResource("2_2yj2r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonMakeFloating" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MAKE_FLOATING"
+icon = SubResource("ImageTexture_oowbh")
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LL/LLT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LL/LLB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LR/LRT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/LR/LRB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RL/RLT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RL/RLB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RR/RRT" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RR/RRB" to="." method="_on_dock_region_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ButtonMakeFloating" to="." method="_on_button_make_floating_pressed"]

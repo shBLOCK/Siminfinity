@@ -18,8 +18,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-DockingManager="*res://src/docking/docking_manager.gd"
-DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
+Globals="*res://src/globals.gd"
+LayoutManager="*res://src/layout/layout_manager.gd"
 
 [display]
 
@@ -28,7 +28,7 @@ window/subwindows/embed_subwindows=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/godot-idea-board/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/script_panel_plus/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
+enabled=PackedStringArray("res://addons/editor_icon_previewer/plugin.cfg", "res://addons/godot-idea-board/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
 
 [godot_idea_board]
 

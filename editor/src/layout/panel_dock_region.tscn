@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dny2jrbn4ptd3"]
+
+[ext_resource type="Script" path="res://src/layout/panel_dock_region.gd" id="1_0ecqn"]
+[ext_resource type="PackedScene" uid="uid://pggaehkc0ba1" path="res://src/layout/dock_options_popup.tscn" id="2_jqw11"]
+
+[node name="PanelDockRegion" type="PanelContainer"]
+offset_right = 204.0
+offset_bottom = 211.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_0ecqn")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+drag_to_rearrange_enabled = true
+tabs_rearrange_group = 0
+
+[node name="DockOptionsPopup" parent="." instance=ExtResource("2_jqw11")]
+visible = false
+
+[connection signal="child_exiting_tree" from="TabContainer" to="." method="_on_tab_container_child_exiting_tree"]
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]

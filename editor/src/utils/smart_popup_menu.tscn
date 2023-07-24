@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://badjhli2lgd0u"]
+
+[ext_resource type="Script" path="res://src/utils/smart_popup_menu.gd" id="1_l67ou"]
+
+[node name="SmartPopupMenu" type="PopupMenu"]
+visible = true
+script = ExtResource("1_l67ou")

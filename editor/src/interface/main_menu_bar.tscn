@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://hqcvy1a4nitf"]
+
+[ext_resource type="Script" path="res://src/interface/main_menu_bar.gd" id="1_0w78p"]
+[ext_resource type="Script" path="res://src/utils/smart_popup_menu.gd" id="1_oj8o0"]
+[ext_resource type="PackedScene" uid="uid://dja5ajysnsoi2" path="res://src/utils/menu_item.tscn" id="2_fhwtk"]
+[ext_resource type="PackedScene" uid="uid://badjhli2lgd0u" path="res://src/utils/smart_popup_menu.tscn" id="3_57lc0"]
+
+[node name="MainMenuBar" type="MenuBar"]
+offset_right = 40.0
+offset_bottom = 40.0
+flat = true
+script = ExtResource("1_0w78p")
+
+[node name="File" type="PopupMenu" parent="."]
+script = ExtResource("1_oj8o0")
+menubar_title = "MAIN_MENU_FILE"
+
+[node name="MenuItem" parent="File" instance=ExtResource("2_fhwtk")]
+
+[node name="Settings" parent="." instance=ExtResource("3_57lc0")]
+visible = false
+menubar_title = "MAIN_MENU_SETTINGS"
+
+[node name="UI_Layout" parent="Settings" instance=ExtResource("2_fhwtk")]
+text = "MAIN_MENU_UI_LAYOUT"
+
+[node name="Load" parent="Settings/UI_Layout" instance=ExtResource("2_fhwtk")]
+text = "MAIN_MENU_UI_LAYOUT_LOAD"
+
+[node name="Save" parent="Settings/UI_Layout" instance=ExtResource("2_fhwtk")]
+text = "MAIN_MENU_UI_LAYOUT_SAVE"
+
+[node name="Separator" parent="Settings/UI_Layout" instance=ExtResource("2_fhwtk")]
+is_separator = true
+
+[node name="Reset" parent="Settings/UI_Layout" instance=ExtResource("2_fhwtk")]
+text = "MAIN_MENU_UI_LAYOUT_RESET"
+
+[node name="Help" parent="." instance=ExtResource("3_57lc0")]
+visible = false
+menubar_title = "MAIN_MENU_HELP"
+
+[connection signal="pressed" from="Settings/UI_Layout/Load" to="." method="_on_ui_layout_load_pressed"]
+[connection signal="pressed" from="Settings/UI_Layout/Save" to="." method="_on_ui_layout_save_pressed"]
+[connection signal="pressed" from="Settings/UI_Layout/Reset" to="." method="_on_ui_layout_reset_pressed"]
