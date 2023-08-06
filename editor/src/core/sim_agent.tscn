@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgti7jmf64fvp"]
+
+[ext_resource type="PackedScene" uid="uid://dhd6c8w6jiuyg" path="res://src/core/sim_obj.tscn" id="1_7s5nc"]
+[ext_resource type="Script" path="res://src/core/sim_agent.gd" id="2_fge8u"]
+
+[node name="SimAgent" instance=ExtResource("1_7s5nc")]
+script = ExtResource("2_fge8u")

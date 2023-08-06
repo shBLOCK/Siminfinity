@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://bciv54hngq6ed"]
+
+[ext_resource type="PackedScene" uid="uid://dhd6c8w6jiuyg" path="res://src/core/sim_obj.tscn" id="1_o8dml"]
+[ext_resource type="Script" path="res://src/core/sim_func.gd" id="2_l1lqb"]
+
+[node name="SimFunc" instance=ExtResource("1_o8dml")]
+script = ExtResource("2_l1lqb")

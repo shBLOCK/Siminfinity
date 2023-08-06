@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhd6c8w6jiuyg"]
+
+[ext_resource type="Script" path="res://src/core/sim_obj.gd" id="1_6mx0s"]
+
+[node name="SimObj" type="Node3D"]
+script = ExtResource("1_6mx0s")

@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://cinor5ixywhml"]
+
+[ext_resource type="PackedScene" uid="uid://dhd6c8w6jiuyg" path="res://src/core/sim_obj.tscn" id="1_0upwg"]
+[ext_resource type="Script" path="res://src/core/sim_var.gd" id="2_setd5"]
+
+[node name="SimVar" instance=ExtResource("1_0upwg")]
+script = ExtResource("2_setd5")
