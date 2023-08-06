@@ -28,7 +28,7 @@ window/subwindows/embed_subwindows=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/editor_icon_previewer/plugin.cfg", "res://addons/godot-idea-board/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
+enabled=PackedStringArray("res://addons/editor_icon_previewer/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
 
 [godot_idea_board]
 
