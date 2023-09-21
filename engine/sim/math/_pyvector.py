@@ -1,11 +1,12 @@
 from numbers import Real
-from typing import Union
-from dynamic_overload import overload
+from typing import Union, Optional, overload
+# from dynamic_overload import overload
 from functools import wraps
 from math import sqrt
 
 
-# noinspection PyRedeclaration
+# DEPRECATED
+
 class Vec2:
     __slots__ = ("x", "y")
 
@@ -13,17 +14,22 @@ class Vec2:
     y: float
 
     @overload
-    def __init__(self):
-        self.x = self.y = 0.0
+    def __init__(self): ...
 
     @overload
-    def __init__(self, value: Real):
-        self.x = self.y = float(value)
+    def __init__(self, value: Real): ...
 
     @overload
-    def __init__(self, x: Real, y: Real):
-        self.x = float(x)
-        self.y = float(y)
+    def __init__(self, x: Real, y: Real): ...
+
+    def __init__(self, a=None, b=None):
+        if a is None:
+            self.x = self.y = 0.0
+        elif b is None:
+            self.x = self.y = float(a)
+        else:
+            self.x = float(a)
+            self.y = float(b)
 
     def __repr__(self) -> str:
         return f"Vec2({self.x}, {self.y})"
@@ -80,7 +86,6 @@ class Vec2:
         return +self / self.length()
 
 
-# noinspection PyRedeclaration
 class Vec3:
     __slots__ = ("x", "y", "z")
 
@@ -101,6 +106,16 @@ class Vec3:
         self.x = float(x)
         self.y = float(y)
         self.z = float(z)
+
+    def __init__(self, a=None, b=None, c=None):
+        if a is None:
+            self.x = self.y = self.z = 0.0
+        elif b is None:
+            self.x = self.y = self.z = a
+        else:
+            self.x = a
+            self.y = b
+            self.z = c
 
     def __repr__(self) -> str:
         return f"Vec3({self.x}, {self.y}, {self.z})"
@@ -162,7 +177,6 @@ class Vec3:
         return +self / self.length()
 
 
-# noinspection PyRedeclaration
 class Vec4:
     __slots__ = ("x", "y", "z", "w")
 
@@ -185,6 +199,17 @@ class Vec4:
         self.y = float(y)
         self.z = float(z)
         self.w = float(w)
+
+    def __init__(self, a=None, b=None, c=None, d=None):
+        if a is None:
+            self.x = self.y = self.z = 0.0
+        elif b is None:
+            self.x = self.y = self.z = a
+        else:
+            self.x = a
+            self.y = b
+            self.z = c
+            self.w = d
 
     def __repr__(self) -> str:
         return f"Vec4({self.x}, {self.y}, {self.z}, {self.w})"
@@ -285,7 +310,7 @@ def _swizzle(vec: AnyVec, swiz: str) -> AnyVec | Real:
 
     for c in swiz:
         mapped_c = _SWIZZLE_MAP.get(c)
-        if mapped_c is None or mapped_c not in vec.__slots__:
+        if mapped_c not in vec.__slots__:
             raise ValueError(f"Invalid vector swizzle item: {c}")
         mapped_swiz += mapped_c
 
@@ -306,4 +331,4 @@ def _swizzle(vec: AnyVec, swiz: str) -> AnyVec | Real:
 if __name__ == '__main__':
     vec = Vec2(1, 2)
     print(vec)
-    print(vec.yxy)
+    # print(vec.yxy)
