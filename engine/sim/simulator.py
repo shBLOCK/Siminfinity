@@ -5,15 +5,15 @@ from event.event_queue import EventQueue
 
 class Simulator:
     def __init__(self):
-        self._time = 0.0
+        self._sim_time = 0.0
 
         self.rng = random.Random()
 
         self.event_queue = EventQueue(self)
 
     @property
-    def time(self) -> float:
-        return self._time
+    def sim_time(self) -> float:
+        return self._sim_time
 
     def process(self):
         event = self.event_queue.pop_next_timed_event()

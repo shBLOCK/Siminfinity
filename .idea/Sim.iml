@@ -2,24 +2,29 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/simulation" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/engine" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/engine/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/editor/.godot" />
       <excludeFolder url="file://$MODULE_DIR$/editor/addons" />
       <excludeFolder url="file://$MODULE_DIR$/editor/examples_dd3d" />
       <excludeFolder url="file://$MODULE_DIR$/editor/signal_extensions" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/engine/codegen/output" />
+      <excludeFolder url="file://$MODULE_DIR$/engine/temp_tests" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="GdSdk" level="project" />
   </component>
   <component name="PyNamespacePackagesService">
     <option name="namespacePackageFolders">
       <list>
-        <option value="$MODULE_DIR$/simulation/event" />
-        <option value="$MODULE_DIR$/simulation/contents" />
-        <option value="$MODULE_DIR$/simulation/utils" />
+        <option value="$MODULE_DIR$/engine/sim/event" />
+        <option value="$MODULE_DIR$/engine/sim/contents" />
+        <option value="$MODULE_DIR$/engine/sim/utils" />
+        <option value="$MODULE_DIR$/engine/sim/data" />
+        <option value="$MODULE_DIR$/engine/sim/math" />
       </list>
     </option>
   </component>

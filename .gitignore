@@ -3,3 +3,4 @@
 /build/
 /editor/examples_dd3d/
 *.tmp
+/sim/temp_tests/

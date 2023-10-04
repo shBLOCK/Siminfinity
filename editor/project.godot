@@ -10,16 +10,16 @@ config_version=5
 
 [application]
 
-config/name="SimEditor"
-run/main_scene="res://src/main_window.tscn"
+config/name="Siminfinity"
+run/main_scene="res://src/main.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 run/low_processor_mode=true
 config/icon="res://icon.svg"
 
 [autoload]
 
-Globals="*res://src/globals.gd"
 LayoutManager="*res://src/layout/layout_manager.gd"
+Serializer="*res://src/utils/Serializer.gd"
 
 [display]
 
