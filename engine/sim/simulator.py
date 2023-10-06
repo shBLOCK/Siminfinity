@@ -1,13 +1,14 @@
 import random
 
-from event.event_queue import EventQueue
+from sim.event.event import TimedEvent, Event
+from sim.event.event_queue import EventQueue
 
 
 class Simulator:
     def __init__(self):
         self._sim_time = 0.0
 
-        self.rng = random.Random()
+        self.random = random.Random(0)
 
         self.event_queue = EventQueue(self)
 
@@ -15,16 +16,28 @@ class Simulator:
     def sim_time(self) -> float:
         return self._sim_time
 
-    def process(self):
-        event = self.event_queue.pop_next_timed_event()
-        if event is None:
-            self.complete()
+    def execute_next_event(self) -> Event:
+        event = self.event_queue.pop_next_event()
 
-        event.execute()
+        if event is None:
+            return None
+
+        if isinstance(event, TimedEvent):
+            self._sim_time = event.sim_time
+
+        event.execute(self)
+
+        return event
+
+    def run_until(self, until: float):
+        while (event := self.event_queue.pop_next_event(until)) is not None:
+            if isinstance(event, TimedEvent):
+                self._sim_time = event.sim_time
+            event.execute(self)
+        self._sim_time = until
 
     def run(self):
-        while True:
-            self.process()
+        while self.execute_next_event() is not None:
+            pass
 
-    def complete(self):
-        pass
+        print("Completed")

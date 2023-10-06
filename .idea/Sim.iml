@@ -12,8 +12,9 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/engine/codegen/output" />
       <excludeFolder url="file://$MODULE_DIR$/engine/temp_tests" />
+      <excludeFolder url="file://$MODULE_DIR$/engine/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 (Siminfinity)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="GdSdk" level="project" />
   </component>

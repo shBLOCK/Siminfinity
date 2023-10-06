@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import Callable
 
+import sim.simulator
+
 
 class Event(ABC):
     def __init__(self):
         pass
 
     @abstractmethod
-    def execute(self) -> None:
+    def execute(self, simulator: "sim.simulator.Simulator") -> None:
         pass
 
 class TimedEvent(Event, ABC):
@@ -16,15 +18,15 @@ class TimedEvent(Event, ABC):
         self.sim_time = sim_time
 
 class TimedEventImpl(TimedEvent):
-    def __init__(self, sim_time: float, execute_func: Callable[[], None]):
+    def __init__(self, sim_time: float, execute_func: Callable[["TimedEventImpl", "sim.simulator.Simulator"], None]):
         super().__init__(sim_time)
 
         self.execute_func = execute_func
 
-    def execute(self) -> None:
-        self.execute_func()
+    def execute(self, simulator: "sim.simulator.Simulator") -> None:
+        self.execute_func(self, simulator)
 
-class ConditionEvent(Event, ABC):
+class ConditionalEvent(Event, ABC):
     def __init__(self):
         super().__init__()
 
@@ -32,8 +34,8 @@ class ConditionEvent(Event, ABC):
     def check(self) -> bool:
         pass
 
-class ConditionEventImpl(ConditionEvent):
-    def __init__(self, check_func: Callable[[], bool], execute_func: Callable[[], None]):
+class ConditionalEventImpl(ConditionalEvent):
+    def __init__(self, check_func: Callable[[], bool], execute_func: Callable[["sim.simulator.Simulator"], None]):
         super().__init__()
 
         self.check_func = check_func
@@ -42,5 +44,5 @@ class ConditionEventImpl(ConditionEvent):
     def check(self) -> bool:
         return self.check_func()
 
-    def execute(self) -> None:
-        self.execute_func()
+    def execute(self, simulator: "sim.simulator.Simulator") -> None:
+        self.execute_func(simulator)

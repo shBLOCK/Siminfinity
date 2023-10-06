@@ -17,7 +17,9 @@ class SimObj:
 
     @classmethod
     def next_id(cls) -> int:
-        return cls._next_id
+        i = cls._next_id
+        cls._next_id += 1
+        return i
 
     @classmethod
     def from_id(cls, sim_id: int) -> Optional["SimObj"]:
