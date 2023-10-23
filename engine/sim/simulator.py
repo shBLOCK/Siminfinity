@@ -8,7 +8,7 @@ class Simulator:
     def __init__(self):
         self._sim_time = 0.0
 
-        self.random = random.Random(0)
+        self.random = random.Random(1)
 
         self.event_queue = EventQueue(self)
 
