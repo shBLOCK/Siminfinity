@@ -470,8 +470,9 @@ def cerate_shelves(network: Agent, validator: Callable[[Point], bool]) -> list[S
     return shelves
 
 
-screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 1050))
-screen_transform.rotation = -math.pi * 0.5
+# screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 1050))
+screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 50))
+# screen_transform.rotation = -math.pi * 0.5
 screen = None
 
 def sp(pos: Vec3) -> tuple[float, float]:
@@ -553,9 +554,9 @@ def main():
     global simulator, screen, screen_transform
     simulator = Simulator()
 
-    # network = create_network(Vec2i(0, 0), Vec2i(13, 12))
-    network = create_network(Vec2i(0, 0), Vec2i(13+7, 100))
-    dest_points = [p for p in network.children if isinstance(p, Point) and p.position.x >= 13+7]
+    network = create_network(Vec2i(0, 0), Vec2i(12, 12))
+    # network = create_network(Vec2i(0, 0), Vec2i(13+7, 100))
+    dest_points = [p for p in network.children if isinstance(p, Point) and p.position.x >= 12]
     for d in dest_points:
         d.dest = True
 
@@ -569,7 +570,7 @@ def main():
 
     def shelf_pos_validator(point: Point):
         p = point.position
-        if not 2 <= p.x <= 8+7:
+        if not 2 <= p.x <= 8:
             return False
         return int(p.z % 3) in (1, 2)
     shelves = cerate_shelves(network, shelf_pos_validator)
