@@ -2,7 +2,7 @@ import bisect
 import math
 import random
 from enum import IntEnum
-from typing import Optional, Iterator, MutableSequence, MutableMapping, TYPE_CHECKING, Self
+from typing import Optional, Iterator, MutableSequence, MutableMapping, TYPE_CHECKING
 
 from sim.event.event import Event, TimedEvent, ConditionalEvent
 if TYPE_CHECKING:
@@ -82,7 +82,7 @@ class EventQueue:
         except ValueError:
             pass
 
-    def __lshift__(self, other: Event) -> Self:
+    def __lshift__(self, other: Event) -> "EventQueue":
         self.add(other)
         return self
 

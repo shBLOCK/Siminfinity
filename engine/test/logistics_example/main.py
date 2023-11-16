@@ -2,6 +2,7 @@ import math
 import pathlib
 import sys
 import random
+import time
 from enum import Enum
 from itertools import permutations, product
 from typing import Sequence, Optional, Callable, MutableSequence
@@ -236,7 +237,7 @@ class AGV(Agent):
             callback()
             return
 
-        if self.path is None or True:
+        if self.path is None or False:
             if self.shelf is not None:
                 ignore_nodes = {s.parent.node for s in self.shelves if isinstance(s.parent, Point)}
             else:
@@ -347,7 +348,7 @@ class SourceEvent(TimedEvent):
                     pass
                     # print("No free AGVs found, skipping a task!")
 
-        self.sim_time += 5
+        self.sim_time += .05
         simulator.event_queue << self
 
 
@@ -373,12 +374,17 @@ def create_network(begin: Vec2i, end: Vec2i) -> Agent:
             point.parent = network
 
     cnt = -1
+    added_paths = set()
     def path(begin, end):
         nonlocal cnt
-        for obj in network.children:
-            if isinstance(obj, Path):
-                if obj.begin == begin and obj.end == end:
-                    return
+        key = (begin, end)
+        if key in added_paths:
+            return
+        added_paths.add(key)
+        # for obj in network.children:
+        #     if isinstance(obj, Path):
+        #         if obj.begin == begin and obj.end == end:
+        #             return
         Path(f"Path{(cnt := cnt + 1)}", begin, end).parent = network
 
     # for x in range(begin.x, end.x):
@@ -411,21 +417,21 @@ def create_network(begin: Vec2i, end: Vec2i) -> Agent:
     #     path(b, a)
 
     for x, y in tqdm.tqdm(tuple(product(range(begin.x, end.x - 0), range(begin.y, end.y - 0)))):
-        for a, b in permutations((points[Vec3i(x+dx, 0, y+dy)] for dx,dy in product(range(2), repeat=2)), 2):
-            path(a, b)
+        # for a, b in permutations((points[Vec3i(x+dx, 0, y+dy)] for dx,dy in product(range(2), repeat=2)), 2):
+        #     path(a, b)
 
-        # a = points[Vec3i(x+0, 0, y+0)]
-        # b = points[Vec3i(x+1, 0, y+0)]
-        # c = points[Vec3i(x+0, 0, y+1)]
-        # d = points[Vec3i(x+1, 0, y+1)]
-        # path(a, b)
-        # path(b, a)
-        # path(a, c)
-        # path(c, a)
-        # path(c, d)
-        # path(d, c)
-        # path(b, d)
-        # path(d, b)
+        a = points[Vec3i(x+0, 0, y+0)]
+        b = points[Vec3i(x+1, 0, y+0)]
+        c = points[Vec3i(x+0, 0, y+1)]
+        d = points[Vec3i(x+1, 0, y+1)]
+        path(a, b)
+        path(b, a)
+        path(a, c)
+        path(c, a)
+        path(c, d)
+        path(d, c)
+        path(b, d)
+        path(d, b)
 
     # for pos, point in points.items():
     #     if pos.x > 0:
@@ -464,7 +470,8 @@ def cerate_shelves(network: Agent, validator: Callable[[Point], bool]) -> list[S
     return shelves
 
 
-screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50))
+screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 1050))
+screen_transform.rotation = -math.pi * 0.5
 screen = None
 
 def sp(pos: Vec3) -> tuple[float, float]:
@@ -546,8 +553,9 @@ def main():
     global simulator, screen, screen_transform
     simulator = Simulator()
 
-    network = create_network(Vec2i(0, 0), Vec2i(13, 12))
-    dest_points = [p for p in network.children if isinstance(p, Point) and p.position.x >= 13]
+    # network = create_network(Vec2i(0, 0), Vec2i(13, 12))
+    network = create_network(Vec2i(0, 0), Vec2i(13+7, 100))
+    dest_points = [p for p in network.children if isinstance(p, Point) and p.position.x >= 13+7]
     for d in dest_points:
         d.dest = True
 
@@ -561,11 +569,12 @@ def main():
 
     def shelf_pos_validator(point: Point):
         p = point.position
-        if not 2 <= p.x <= 8:
+        if not 2 <= p.x <= 8+7:
             return False
         return int(p.z % 3) in (1, 2)
     shelves = cerate_shelves(network, shelf_pos_validator)
-    agvs = create_agvs(network, lambda point: point.position.x < 1 and point.position.z <= 12, shelves)
+    print(len(shelves))
+    agvs = create_agvs(network, lambda point: point.position.x < 1 and point.position.z <= 1000000, shelves)
 
     source_event = SourceEvent(list(agvs.children), shelves, dest_points)
     simulator.event_queue << source_event
@@ -573,18 +582,22 @@ def main():
     screen = pg.display.set_mode((800, 700), pg.RESIZABLE)
     clock = pg.Clock()
 
+    # t = time.time()
+    # simulator.run_until(3600)
+    # print(time.time() - t)
+
     ft = 0.0
     speed = 10
     while True:
         ft += clock.get_time() / 1000 * speed
         simulator.run_until(ft)
-        # for _ in range(500):
+        # for _ in range(50):
         #     simulator.execute_next_event()
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                sys.exit()
+                return
             if event.type == pg.MOUSEWHEEL:
                 screen_transform @= Transform2D.scaling(Vec2(1 + event.y * 0.1))
             if event.type == pg.KEYDOWN:
@@ -605,4 +618,9 @@ def main():
 
 
 if __name__ == '__main__':
+    # import viztracer
+    # viz = viztracer.VizTracer()
+    # viz.start()
     main()
+    # viz.stop()
+    # viz.save()
