@@ -1,0 +1,11 @@
+Model Information:
+* title:	AGV
+* source:	https://sketchfab.com/3d-models/agv-816d3ac15f254bafb9d595851d5370c4
+* author:	StephenSun (https://sketchfab.com/bbcool4444)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "AGV" (https://sketchfab.com/3d-models/agv-816d3ac15f254bafb9d595851d5370c4) by StephenSun (https://sketchfab.com/bbcool4444) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

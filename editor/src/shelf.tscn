@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cuew65qr2ch50"]
+
+[ext_resource type="Script" path="res://src/shelf.gd" id="1_4sd6v"]
+[ext_resource type="PackedScene" uid="uid://dnrw5a58k8fos" path="res://src/assets/rack2/AGV货架.gltf" id="1_ki3jc"]
+
+[node name="Shelf" type="Node3D"]
+script = ExtResource("1_4sd6v")
+
+[node name="AGV货架" parent="." instance=ExtResource("1_ki3jc")]

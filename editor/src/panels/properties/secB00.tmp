@@ -1,8 +1,0 @@
-extends PanelContainer
-
-
-func setup(name: String, icon: Texture2D):
-	print("set")
-	%Name.text = name
-	%Icon.texture = icon
-	return self

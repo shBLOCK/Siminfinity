@@ -11,34 +11,48 @@ config_version=5
 [application]
 
 config/name="Siminfinity"
-run/main_scene="res://src/main.tscn"
-config/features=PackedStringArray("4.1", "Forward Plus")
-run/low_processor_mode=true
+run/main_scene="res://src/agv_demo.tscn"
+config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
+[debug]
 
-LayoutManager="*res://src/layout/layout_manager.gd"
-Serializer="*res://src/utils/Serializer.gd"
+gdscript/warnings/untyped_declaration=1
 
 [display]
 
-window/energy_saving/keep_screen_on=false
-window/subwindows/embed_subwindows=false
+window/size/viewport_width=7680
+window/size/viewport_height=4320
+window/size/window_width_override=7680
+window/size/window_height_override=4320
+
+[editor]
+
+movie_writer/movie_file="C:/Users/Public/Projects/Siminfinity/editor/movie/render.png"
+movie_writer/fps=30
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/editor_icon_previewer/plugin.cfg", "res://addons/zylann.editor_debugger/plugin.cfg")
+enabled=PackedStringArray("res://addons/script-ide/plugin.cfg", "res://addons/siminfinity/plugin.cfg")
 
-[godot_idea_board]
+[input]
 
-directory_path="res://addons/godot-idea-board/savedata/"
+speed_up={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194320,"key_label":0,"unicode":0,"echo":false,"script":null)
+]
+}
+slow_down={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194322,"key_label":0,"unicode":0,"echo":false,"script":null)
+]
+}
+toggle_pause={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"echo":false,"script":null)
+]
+}
 
-[gui]
+[rendering]
 
-theme/custom="res://assets/theme/dark.theme"
-
-[internationalization]
-
-locale/translations=PackedStringArray("res://assets/lang/lang.en.translation", "res://assets/lang/lang.zh.translation")
-locale/test="zh"
+anti_aliasing/quality/msaa_3d=2

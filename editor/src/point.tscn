@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bvjpm3s87tho8"]
+
+[sub_resource type="Gradient" id="Gradient_wmbtu"]
+offsets = PackedFloat32Array(0.653061, 0.727891, 1)
+colors = PackedColorArray(0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2srgk"]
+gradient = SubResource("Gradient_wmbtu")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uejed"]
+shading_mode = 0
+albedo_color = Color(0, 3, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_uo7cu"]
+material = SubResource("StandardMaterial3D_uejed")
+radius = 0.1
+height = 0.1
+radial_segments = 16
+rings = 8
+
+[node name="Point" type="Node3D"]
+
+[node name="Decal" type="Decal" parent="."]
+visible = false
+size = Vector3(0.3, 0.1, 0.3)
+texture_albedo = SubResource("GradientTexture2D_2srgk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_uo7cu")

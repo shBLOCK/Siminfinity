@@ -13,6 +13,8 @@
       <excludeFolder url="file://$MODULE_DIR$/engine/codegen/output" />
       <excludeFolder url="file://$MODULE_DIR$/engine/temp_tests" />
       <excludeFolder url="file://$MODULE_DIR$/engine/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/venv_pypy" />
+      <excludeFolder url="file://$MODULE_DIR$/editor_old/.godot" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (Siminfinity)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
