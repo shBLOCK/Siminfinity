@@ -36,6 +36,9 @@ class Simulator:
             event.execute(self)
         self._sim_time = until
 
+    def advance(self, time: float):
+        self.run_until(self.sim_time + time)
+
     def run(self):
         while self.execute_next_event() is not None:
             pass

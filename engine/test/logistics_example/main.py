@@ -1,3 +1,5 @@
+import asyncio
+import json
 import math
 import pathlib
 import sys
@@ -14,14 +16,17 @@ from sim.contents.sim_obj import SimObj
 from sim.contents.agent import Agent, PositionalAgent, SpatialAgent
 from sim.data.property import SimInstanceProperty
 from sim.event.event import TimedEvent, ConditionalEvent, ConditionalEventImpl, TimedEventImpl
+from sim.data.serialization import gd_serialize
 from gdmath import *
 
 import path_find
 
 import pygame as pg
 
+import websockets
 
-simulator: Simulator = None
+
+simulator: Simulator = Simulator()
 
 
 class Point(PositionalAgent):
@@ -30,6 +35,8 @@ class Point(PositionalAgent):
 
     def __init__(self, name: str, position: Vec3):
         super().__init__(name, position)
+
+        self.is_dest = False
 
         self._locked_by: Optional["AGV"] = None
 
@@ -175,7 +182,7 @@ class AGV(Agent):
     def can_do_next_task(self) -> bool:
         return self.state == AGVState.IDLE or self.state == AGVState.TO_HOME
 
-    def assign_task(self, shelf: "Shelf", dest: Point):
+    def assign_task(self, shelf: "Shelf", dest: Point, finish_callback = lambda a,b: None):
         assert self.can_do_next_task()
         self.state = AGVState.GRAB_SHELF
         def grab_arrived_callback():
@@ -204,6 +211,7 @@ class AGV(Agent):
             shelf.parent = shelf.point
             self.state = AGVState.TO_HOME
             self._set_destination(self.home, arrived_at_home_callback)
+            finish_callback(shelf, dest)
         def arrived_at_home_callback():
             self.state = AGVState.IDLE
 
@@ -326,23 +334,24 @@ class SourceEvent(TimedEvent):
         self.agvs = agvs
         self.shelves = shelves
         self.dest_points = dest_points
+        self._unassigned_shelves = list(self.shelves)
 
     def execute(self, simulator: Simulator) -> None:
-        grounded_shelves = [s for s in self.shelves if isinstance(s.parent, Point) and s.parent not in self.dest_points]
         dest_points = list(self.dest_points)
         for shelf in self.shelves:
             if shelf.destination in dest_points:
                 dest_points.remove(shelf.destination)
 
-        if dest_points and grounded_shelves:
-            shelf = simulator.random.choice(grounded_shelves)
+        if dest_points and self._unassigned_shelves:
+            shelf = simulator.random.choice(self._unassigned_shelves)
             for agv in sorted(self.agvs, key=lambda a: a.position | shelf.global_position):
                 if not agv.can_do_next_task():
                     continue
                 if agv.shelf is None:
                     dest = simulator.random.choice(dest_points)
                     shelf.destination = dest
-                    agv.assign_task(shelf, dest)
+                    self._unassigned_shelves.remove(shelf)
+                    agv.assign_task(shelf, dest, lambda s,_: self._unassigned_shelves.append(s))
                     break
                 else:
                     pass
@@ -352,276 +361,217 @@ class SourceEvent(TimedEvent):
         simulator.event_queue << self
 
 
-def create_network(begin: Vec2i, end: Vec2i) -> Agent:
-    network = Agent("Network")
+class Main:
+    def __init__(self):
+        global simulator
+        # simulator = Simulator()
 
-    cnt = -1
-    points = {}
-    for x in range(begin.x, end.x + 1):
-        for z in range(begin.y, end.y + 1):
-            pos = Vec3i(x, 0, z)
-            ap = Vec3(pos)
-            # o = Vec3(6, 0, 6)
-            # ap = Transform3D.translating(-o) * ap
-            # ap = Transform3D.rotating(Vec3(0, 1, 0), ap.length * 0.1) * ap
-            # ap = Transform3D.translating(o) * ap
+        with open("cfg.json", "r") as f:
+            cfg = json.loads(f.read())
 
-            # import random
-            # ap += Vec3(0, random.random() * 10, 0)
+        self.root = Agent("Root")
 
-            point = Point(f"Point{(cnt:=cnt+1)}", ap)
-            points[pos] = point
-            point.parent = network
+        self.network = Agent("Network")
+        self.network.parent = self.root
 
-    cnt = -1
-    added_paths = set()
-    def path(begin, end):
-        nonlocal cnt
-        key = (begin, end)
-        if key in added_paths:
-            return
-        added_paths.add(key)
-        # for obj in network.children:
-        #     if isinstance(obj, Path):
-        #         if obj.begin == begin and obj.end == end:
-        #             return
-        Path(f"Path{(cnt := cnt + 1)}", begin, end).parent = network
+        points = []
+        for point in cfg["network"]["points"]:
+            p = Point(point[0], Vec3(*point[1]))
+            p.parent = self.network
+            points.append(p)
 
-    # for x in range(begin.x, end.x):
-    #     for y in range(begin.y, end.y):
-    #         # pa pb
-    #         # pc pd
-    #         pa = points[Vec3i(x, 0, y)]
-    #         pb = points[Vec3i(x+1, 0, y)]
-    #         pc = points[Vec3i(x, 0, y+1)]
-    #         pd = points[Vec3i(x+1, 0, y+1)]
-    #
-    #         for a, b in permutations((pa, pb, pc, pd), 2):
-    #             path(a, b)
-    #
-    #         # path(pa, pb)
-    #         # path(pb, pa)
-    #         # path(pc, pd)
-    #         # path(pd, pc)
-    #         # path(pa, pc)
-    #         # path(pc, pa)
-    #         # path(pb, pd)
-    #         # path(pd, pb)
+        self.dest_points = []
+        for dest in cfg["dest_points"]:
+            points[dest].is_dest = True
+            self.dest_points.append(points[dest])
 
-    # values = tuple(points.values())
+        for path in cfg["network"]["paths"]:
+            Path(path[0], points[path[1]], points[path[2]]).parent = self.network
 
-    # for i in range(300):
-    #     a = random.choice(values)
-    #     b = random.choice(values)
-    #     path(a, b)
-    #     path(b, a)
+        update_network(self.network)
 
-    for x, y in tqdm.tqdm(tuple(product(range(begin.x, end.x - 0), range(begin.y, end.y - 0)))):
-        # for a, b in permutations((points[Vec3i(x+dx, 0, y+dy)] for dx,dy in product(range(2), repeat=2)), 2):
-        #     path(a, b)
+        self.shelves = []
+        for shelf in cfg["shelves"]:
+            self.shelves.append(Shelf(shelf[0], points[shelf[1]]))
 
-        a = points[Vec3i(x+0, 0, y+0)]
-        b = points[Vec3i(x+1, 0, y+0)]
-        c = points[Vec3i(x+0, 0, y+1)]
-        d = points[Vec3i(x+1, 0, y+1)]
-        path(a, b)
-        path(b, a)
-        path(a, c)
-        path(c, a)
-        path(c, d)
-        path(d, c)
-        path(b, d)
-        path(d, b)
+        self.agvs = Agent("AGVs")
+        self.agvs.parent = self.root
+        for i, params in enumerate(cfg["agvs"]):
+            color = pg.Color.from_hsva(i / len(cfg["agvs"]) * 360, 100, 100, 100)
+            AGV(params[0], points[params[1]], 0, color, self.shelves).parent = self.agvs
 
-    # for pos, point in points.items():
-    #     if pos.x > 0:
-    #         other = points[pos - Vec3i(1, 0, 0)]
-    #         Path(f"Path{(cnt:=cnt+1)}", point, other).parent = network
-    #         Path(f"Path{(cnt:=cnt+1)}", other, point).parent = network
-    #     if pos.z > 0:
-    #         other = points[pos - Vec3i(0, 0, 1)]
-    #         Path(f"Path{(cnt:=cnt+1)}", point, other).parent = network
-    #         Path(f"Path{(cnt:=cnt+1)}", other, point).parent = network
+        self.source_event = SourceEvent(list(self.agvs.children), self.shelves, self.dest_points)
+        simulator.event_queue << self.source_event
 
-    return network
+        self.screen = pg.display.set_mode((800, 700), pg.RESIZABLE)
+        self.screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 50))
+        # self.screen_transform.rotation = -math.pi * 0.5
+        self.clock = pg.Clock()
 
-def create_agvs(network: Agent, validator: Callable[[Point], bool], shelves: Sequence[Shelf]) -> Agent:
-    agvs = Agent("AGVs")
-    cnt = -1
-    points = []
-    for obj in network.children:
-        if isinstance(obj, Point):
-            if validator(obj):
-                points.append(obj)
-    for i, point in enumerate(points):
-        color = pg.Color.from_hsva(i/len(points)*360, 100, 100, 100)
-        agv = AGV(f"AGV{(cnt:=cnt+1)}", point, 0, color, shelves)
-        agv.parent = agvs
-    return agvs
+        self._last_sim_time = time.perf_counter()
+        self.speed = 10.0
+        self.paused = False
 
-def cerate_shelves(network: Agent, validator: Callable[[Point], bool]) -> list[Shelf]:
-    shelves = []
-    cnt = -1
-    for obj in network.children:
-        if isinstance(obj, Point):
-            if validator(obj):
-                shelve = Shelf(f"Shelf{(cnt:=cnt+1)}", obj)
-                shelves.append(shelve)
-    return shelves
+        self._clients: list[websockets.WebSocketServerProtocol] = []
 
+    async def _advance_sim(self):
+        t = time.perf_counter()
+        if not self.paused:
+            simulator.advance((t - self._last_sim_time) * self.speed)
+        self._last_sim_time = t
+        self.clock.tick(60)
 
-# screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 1050))
-screen_transform = Transform2D.scaling(Vec2(50)).translated(Vec2(50, 50))
-# screen_transform.rotation = -math.pi * 0.5
-screen = None
-
-def sp(pos: Vec3) -> tuple[float, float]:
-    """Global position to screen position"""
-    return screen_transform(pos.xz)
-
-def ss(size: float) -> float:
-    return size * screen_transform.scale.x
-
-
-def draw_network(network):
-    for obj in network.children:
-        if isinstance(obj, Path):
-            pg.draw.aaline(
-                screen,
-                (255,255,255),
-                sp(obj.begin.position),
-                sp(obj.end.position)
-            )
-
-    for obj in network.children:
-        if isinstance(obj, Point):
-            # color = (200,0,0) if obj.locked_by is not None else (0,200,0)
-            color = (255,255,255)
-            if obj.locked_by is not None:
-                color = obj.locked_by.color
-            if hasattr(obj, "dest"):
-                color = (0,0,255)
-            pg.draw.circle(
-                screen,
-                color,
-                sp(obj.position),
-                ss(0.1)
-            )
-
-# def agv_transform(agv: AGV, ft: float):
-#     if agv.move_event is None:
-#         return agv.transform
-#
-
-def draw_agvs(agvs: Agent):
-    for agv in agvs.children:
-        size = 0.3
-        pts = (Vec3(-size, 0, -size), Vec3(size, 0, -size*0.5), Vec3(size, 0, size*0.5), Vec3(-size, 0, size))
-        transform = agv.global_transform
-        transform = transform.scaled(Vec3(1.0+transform.origin.y/10))
-        r = random.Random(agv.obj_id)
-        pg.draw.polygon(
-            screen,
-            agv.color,
-            [sp(transform * p) for p in pts]
-        )
-
-        if agv.path is not None and len(agv.path) >= 2:
-            pg.draw.lines(
-                screen,
-                agv.color,
-                False,
-                [sp(agv.position)] + [sp(node.pos) for node in agv.path],
-                max(1, int(ss(0.2)))
-            )
-
-def draw_shelves(shelves: Sequence[Shelf]):
-    for shelf in shelves:
-        r = random.Random(shelf.obj_id)
-        color = pg.Color.from_hsva(r.random() * 360, 50, 80, 100)
-        size = 0.4 if isinstance(shelf.parent, AGV) else 0.35
-        pts = (Vec3(-size, 0, -size), Vec3(size, 0, -size), Vec3(size, 0, size), Vec3(-size, 0, size))
-        transform = shelf.global_transform
-        pg.draw.polygon(
-            screen,
-            color,
-            [sp(transform * p) for p in pts],
-            max(1, int(ss(0.06)))
-        )
-
-
-def main():
-    global simulator, screen, screen_transform
-    simulator = Simulator()
-
-    network = create_network(Vec2i(0, 0), Vec2i(12, 12))
-    # network = create_network(Vec2i(0, 0), Vec2i(13+7, 100))
-    dest_points = [p for p in network.children if isinstance(p, Point) and p.position.x >= 12]
-    for d in dest_points:
-        d.dest = True
-
-    # for dp in dest_points:
-    #     for dpp in dest_points:
-    #         p = dp.find_path(dpp)
-    #         if p is not None:
-    #             network.remove_child(p)
-
-    update_network(network)
-
-    def shelf_pos_validator(point: Point):
-        p = point.position
-        if not 2 <= p.x <= 8:
-            return False
-        return int(p.z % 3) in (1, 2)
-    shelves = cerate_shelves(network, shelf_pos_validator)
-    print(len(shelves))
-    agvs = create_agvs(network, lambda point: point.position.x < 1 and point.position.z <= 1000000, shelves)
-
-    source_event = SourceEvent(list(agvs.children), shelves, dest_points)
-    simulator.event_queue << source_event
-
-    screen = pg.display.set_mode((800, 700), pg.RESIZABLE)
-    clock = pg.Clock()
-
-    # t = time.time()
-    # simulator.run_until(3600)
-    # print(time.time() - t)
-
-    ft = 0.0
-    speed = 10
-    while True:
-        ft += clock.get_time() / 1000 * speed
-        simulator.run_until(ft)
-        # for _ in range(50):
-        #     simulator.execute_next_event()
-
+    async def _pygame_draw(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-                return
+                sys.exit()
             if event.type == pg.MOUSEWHEEL:
-                screen_transform @= Transform2D.scaling(Vec2(1 + event.y * 0.1))
+                self.screen_transform @= Transform2D.scaling(Vec2(1 + event.y * 0.1))
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_DOWN:
-                    speed *= 0.5
+                    self.speed *= 0.5
                 elif event.key == pg.K_UP:
-                    speed *= 1.5
+                    self.speed *= 1.5
+                elif event.key == pg.K_SPACE:
+                    self.paused = not self.paused
 
-        screen.fill(0)
+        self.screen.fill(0)
 
-        draw_agvs(agvs)
-        draw_network(network)
-        draw_shelves(shelves)
+        self.draw_agvs()
+        self.draw_network()
+        self.draw_shelves()
 
-        pg.display.set_caption(f"Logistics Demo - {simulator.sim_time:.2f}s - Spd:{speed:.2f} - E:{simulator.event_queue._test_temp_eid} - {clock.get_fps():.1f}FPS")
+        pg.display.set_caption(
+            f"Logistics Demo - {simulator.sim_time:.2f}s - Spd:{self.speed:.2f} - E:{simulator.event_queue._test_temp_eid} - {self.clock.get_fps():.1f}FPS" + (" - PAUSED" if self.paused else ""))
         pg.display.flip()
-        clock.tick(0)
+
+        self.clock.tick(60)
+
+    async def _send_to_clients(self):
+        if not self._clients:
+            return
+        msg = {
+            "agv_transforms": [agv.global_transform for agv in self.agvs.children],
+            "shelf_transforms": [shelf.global_transform for shelf in self.shelves],
+        }
+        msg = gd_serialize(msg)
+        for client in self._clients:
+            try:
+                await client.send(msg)
+            except websockets.exceptions.ConnectionClosed:
+                pass
+
+    async def _handle_client(self, client: websockets.WebSocketServerProtocol):
+        self._clients.append(client)
+        print(f"Client connected: {client.remote_address}")
+        try:
+            while True:
+                msg = await client.recv()
+                match msg:
+                    case "speed_up":
+                        self.speed *= 1.5
+                    case "slow_down":
+                        self.speed *= 0.5
+                    case "toggle_pause":
+                        self.paused = not self.paused
+                    case _:
+                        print(f"Unknown msg from client : {msg}")
+        except websockets.WebSocketException:
+            pass
+        finally:
+            self._clients.remove(client)
+
+
+    def sp(self, pos: Vec3) -> tuple[float, float]:
+        """Global position to screen position"""
+        return self.screen_transform(pos.xz)
+
+    def ss(self, size: float) -> float:
+        return size * self.screen_transform.scale.x
+
+    def draw_network(self):
+        for obj in self.network.children:
+            if isinstance(obj, Path):
+                pg.draw.aaline(
+                    self.screen,
+                    (255, 255, 255),
+                    self.sp(obj.begin.position),
+                    self.sp(obj.end.position)
+                )
+
+        for obj in self.network.children:
+            if isinstance(obj, Point):
+                # color = (200,0,0) if obj.locked_by is not None else (0,200,0)
+                color = (255, 255, 255)
+                if obj.locked_by is not None:
+                    color = obj.locked_by.color
+                if obj.is_dest:
+                    color = (0, 0, 255)
+                pg.draw.circle(
+                    self.screen,
+                    color,
+                    self.sp(obj.position),
+                    self.ss(0.1)
+                )
+
+    def draw_agvs(self):
+        for agv in self.agvs.children:
+            size = 0.3
+            pts = (Vec3(-size, 0, -size), Vec3(size, 0, -size * 0.5), Vec3(size, 0, size * 0.5), Vec3(-size, 0, size))
+            transform = agv.global_transform
+            transform = transform.scaled(Vec3(1.0 + transform.origin.y / 10))
+            r = random.Random(agv.obj_id)
+            pg.draw.polygon(
+                self.screen,
+                agv.color,
+                [self.sp(transform * p) for p in pts]
+            )
+
+            if agv.path is not None and len(agv.path) >= 2:
+                pg.draw.lines(
+                    self.screen,
+                    agv.color,
+                    False,
+                    [self.sp(agv.position)] + [self.sp(node.pos) for node in agv.path],
+                    max(1, int(self.ss(0.2)))
+                )
+
+    def draw_shelves(self):
+        for shelf in self.shelves:
+            r = random.Random(shelf.obj_id)
+            color = pg.Color.from_hsva(r.random() * 360, 50, 80, 100)
+            size = 0.4 if isinstance(shelf.parent, AGV) else 0.35
+            pts = (Vec3(-size, 0, -size), Vec3(size, 0, -size), Vec3(size, 0, size), Vec3(-size, 0, size))
+            transform = shelf.global_transform
+            pg.draw.polygon(
+                self.screen,
+                color,
+                [self.sp(transform * p) for p in pts],
+                max(1, int(self.ss(0.06)))
+            )
+
+    async def _main_loop(self):
+        while True:
+            await self._advance_sim()
+            await self._send_to_clients()
+            await self._pygame_draw()
+            await asyncio.sleep(0)
+
+    async def _run(self):
+        await asyncio.gather(
+            self._main_loop(),
+            websockets.serve(self._handle_client, "localhost", 31415),
+        )
+
+    def run(self):
+        asyncio.run(self._run())
 
 
 if __name__ == '__main__':
     # import viztracer
     # viz = viztracer.VizTracer()
     # viz.start()
-    main()
+    Main().run()
     # viz.stop()
     # viz.save()

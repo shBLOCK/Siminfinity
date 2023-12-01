@@ -33,6 +33,12 @@ class Agent(SimObj):
             c._parent = None
         self._children.clear()
 
+    def find_child(self, name: str) -> Optional["Agent"]:
+        for c in self._children:
+            if c.name == name:
+                return c
+        return None
+
     @property
     def children(self) -> Sequence["Agent"]:
         return tuple(self._children)
